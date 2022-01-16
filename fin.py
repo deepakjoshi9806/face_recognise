@@ -13,6 +13,7 @@ present = []
 
 
 def face_recognize(dir) :
+    print("training initiated")
     if dir[-1] != '/' :
         dir += '/'
     train_dir = os.listdir(dir)
@@ -30,6 +31,7 @@ def face_recognize(dir) :
     clf = svm.SVC(gamma='scale')  # run the svm classifier
     clf.fit(encodings, names)  # label encodings with the respective names
     video_capture = cv2.VideoCapture(0)  # start video stream
+    print("camera accessed for real time feed!")
     while True :
         ret, frame = video_capture.read()
         rgb_frame = frame[:, :, : :-1]  # convert bgr to rgb
@@ -38,7 +40,8 @@ def face_recognize(dir) :
             test_image_enc = face_recognition.face_encodings(rgb_frame[top :bottom, left :right])  # generate encoding
             name = clf.predict(test_image_enc)  # compare this encoding with the above generated encoding
             print(*name)  # print the label of closest matching encoding
-            present.append(*name)  # save the label of closest matching encoding
+            present.append(*name)   # save the label of closest matching encoding
+            cv2.imshow("screen", rgb_frame)
         if cv2.waitKey(1) & 0xFF == ord('q') :
             break
 
